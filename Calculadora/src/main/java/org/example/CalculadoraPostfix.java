@@ -1,9 +1,7 @@
+package org.example;
 import java.util.*;
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
 
-
-public class CalculadoraPostfix implements ICalculadora {
+public class CalculadoraPostfix implements ICalculator {
     private IStack<Integer> stack;
 
     public CalculadoraPostfix(IStack<Integer> stack) {
@@ -15,7 +13,6 @@ public class CalculadoraPostfix implements ICalculadora {
         if (expression == null || expression.trim().isEmpty()) {
             throw new IllegalArgumentException("La expresión no puede estar vacía");
         }
-
         String[] tokens = expression.split(" ");
         for (String token : tokens) {
             if (isNumeric(token)) {
@@ -26,7 +23,7 @@ public class CalculadoraPostfix implements ICalculadora {
                 }
                 int b = stack.pop();
                 int a = stack.pop();
-                
+
                 switch (token) {
                     case "+":
                         stack.push(a + b);
@@ -68,65 +65,5 @@ public class CalculadoraPostfix implements ICalculadora {
             return false;
         }
     }
-}
 
-// junitx d
-class CalculadoraPostfixTest {
-    private CalculadoraPostfix calculadora;
-    private IStack<Integer> stack;
-
-    @BeforeEach
-    void setUp() {
-        stack = new StackArray<>(); 
-        calculadora = new CalculadoraPostfix(stack);
-    }
-
-    @Test
-    void testSuma() throws Exception {
-        assertEquals(7, calculadora.evaluate("3 4 +"));
-    }
-
-    @Test
-    void testResta() throws Exception {
-        assertEquals(1, calculadora.evaluate("5 4 -"));
-    }
-
-    @Test
-    void testMultiplicacion() throws Exception {
-        assertEquals(20, calculadora.evaluate("5 4 *"));
-    }
-
-    @Test
-    void testDivision() throws Exception {
-        assertEquals(2, calculadora.evaluate("8 4 /"));
-    }
-
-    @Test
-    void testModulo() throws Exception {
-        assertEquals(1, calculadora.evaluate("9 4 %"));
-    }
-
-    @Test
-    void testModuloPorCero() {
-        Exception exception = assertThrows(ArithmeticException.class, () -> {
-            calculadora.evaluate("8 0 %");
-        });
-        assertEquals("División por cero", exception.getMessage());
-    }
-
-    @Test
-    void testDivisionPorCero() {
-        Exception exception = assertThrows(ArithmeticException.class, () -> {
-            calculadora.evaluate("8 0 /");
-        });
-        assertEquals("División por cero", exception.getMessage());
-    }
-
-    @Test
-    void testExpresionMalFormateada() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            calculadora.evaluate("5 +");
-        });
-        assertEquals("Expresión mal formateada", exception.getMessage());
-    }
 }
